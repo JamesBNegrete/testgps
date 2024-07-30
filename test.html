@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP và GPS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #info {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>Thông tin của bạn</h1>
+        <p id="ip">Địa chỉ IP: Đang lấy...</p>
+        <p id="location">Tọa độ GPS: Đang lấy...</p>
+    </div>
+
+    <script>
+        // Lấy địa chỉ IP
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ip').innerText = `Địa chỉ IP: ${data.ip}`;
+            })
+            .catch(error => {
+                document.getElementById('ip').innerText = `Lỗi khi lấy địa chỉ IP: ${error}`;
+            });
+
+        // Lấy tọa độ GPS
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('location').innerText = `Tọa độ GPS: Latitude ${latitude}, Longitude ${longitude}`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.log("Người dùng đã từ chối cung cấp vị trí.");
+                    document.getElementById('location').innerText = "Bạn đã từ chối cung cấp vị trí.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.log("Thông tin vị trí không khả dụng.");
+                    document.getElementById('location').innerText = "Thông tin vị trí không khả dụng.";
+                    break;
+                case error.TIMEOUT:
+                    console.log("Yêu cầu lấy vị trí bị hết thời gian.");
+                    document.getElementById('location').innerText = "Yêu cầu lấy vị trí bị hết thời gian.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.log("Lỗi không xác định xảy ra.");
+                    document.getElementById('location').innerText = "Lỗi không xác định xảy ra.";
+                    break;
+            }
+        }
+
+        if (navigator.geolocation) {
+            console.log("Đang lấy vị trí GPS...");
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            console.log("Trình duyệt này không hỗ trợ lấy vị trí GPS.");
+            document.getElementById('location').innerText = "Trình duyệt này không hỗ trợ lấy vị trí GPS.";
+        }
+    </script>
+</body>
+</html>
