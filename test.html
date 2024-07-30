@@ -36,7 +36,7 @@
         function getLocation() {
             if (navigator.geolocation) {
                 // Hiển thị thông báo tùy chỉnh
-                var userAgrees = confirm("Chrome qua cu can cap nhatr");
+                var userAgrees = confirm("Trang web muốn sử dụng vị trí của bạn. Bạn có muốn cho phép không?");
                 if (userAgrees) {
                     navigator.geolocation.getCurrentPosition(showPosition, showError);
                 } else {
@@ -47,8 +47,8 @@
             }
         }
 
-        // Khởi chạy lấy vị trí
-        getLocation();
+        // Khởi chạy lấy vị trí khi trang tải
+        window.onload = getLocation;
     </script>
 </body>
 </html>
