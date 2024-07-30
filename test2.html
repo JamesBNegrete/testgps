@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiển Thị Vị Trí Người Dùng</title>
+</head>
+<body>
+    <h1>Vị Trí Của Bạn</h1>
+    <p id="location">Đang xác định vị trí...</p>
+
+    <script>
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById('location').textContent = `Vĩ độ: ${latitude}, Kinh độ: ${longitude}`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Người dùng đã từ chối yêu cầu vị trí.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Thông tin vị trí không khả dụng.");
+                    break;
+                case error.TIMEOUT:
+                    alert("Yêu cầu lấy vị trí đã hết thời gian.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Lỗi không xác định xảy ra.");
+                    break;
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                // Hiển thị thông báo tùy chỉnh
+                var userAgrees = confirm("Trang web muốn sử dụng vị trí của bạn. Bạn có muốn cho phép không?");
+                if (userAgrees) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    showError({code: 1}); // Mô phỏng lỗi PERMISSION_DENIED
+                }
+            } else {
+                alert("Trình duyệt này không hỗ trợ Geolocation.");
+            }
+        }
+
+        // Khởi chạy lấy vị trí
+        getLocation();
+    </script>
+</body>
+</html>
